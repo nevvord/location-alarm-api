@@ -40,5 +40,7 @@ export class AuthController {
       sameSite: true,
       secure: false,
     });
+
+    res.json({});
   }
 }
