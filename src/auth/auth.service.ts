@@ -36,62 +36,10 @@ export class AuthService {
         user = await this.usersService.getByEmail(userInfo.data.email);
       }
 
-      console.log('========= user', user);
-
       return await this.getTokens({
         sub: user._id.toString(),
         email: user.email,
       });
-
-      // const urlPOST = 'https://oauth2.googleapis.com/token';
-      //
-      // const tokenRes = await axios.post(urlPOST, {
-      //   client_id: oauthConfig().clientId,
-      //   client_secret: oauthConfig().clientSecret,
-      //   redirect_uri: loginDto.redirectUri,
-      //   code: loginDto.code,
-      //   grant_type: 'authorization_code',
-      // });
-      //
-      // const token = tokenRes.data;
-      // console.log('======== token', token);
-      //
-      // if (token.id_token) {
-      //   const tokenInfoRes = await axios.get(
-      //     `https://oauth2.googleapis.com/tokeninfo?id_token=${token.id_token}`,
-      //   );
-      //
-      //   const tokenInfo = tokenInfoRes.data;
-      //   console.log('======== tokenInfo', tokenInfo);
-      //
-      //   if (tokenInfo.email) {
-      //     let user = await this.usersService.getByEmail(tokenInfo.email);
-      //
-      //     if (!user) {
-      //       await this.usersService.create({
-      //         email: tokenInfo.email,
-      //         firstName: tokenInfo.firstName,
-      //         lastName: tokenInfo.lastName,
-      //         photo: tokenInfo.photo,
-      //       });
-      //
-      //       user = await this.usersService.getByEmail(tokenInfo.email);
-      //     }
-      //
-      //     console.log('========= user', user);
-      //
-      //     return await this.getTokens({
-      //       sub: user._id.toString(),
-      //       email: user.email,
-      //     });
-      //   } else {
-      //     throw new UnauthorizedException(
-      //       'Authorization failed, this email does not exist',
-      //     );
-      //   }
-      // } else {
-      //   throw new UnauthorizedException('Authorization failed');
-      // }
     } catch (e) {
       console.log(e);
     }
