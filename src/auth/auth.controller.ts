@@ -4,7 +4,6 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import mainConfig from '../config/main.config';
 import {
-  ApiBearerAuth,
   ApiBody,
   ApiOAuth2,
   ApiOperation,
