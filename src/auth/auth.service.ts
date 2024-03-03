@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import axios, { AxiosResponse } from 'axios';
 import { JwtPayload } from './strategies/jwt-access.strategy';
@@ -93,7 +93,14 @@ export class AuthService {
       //   throw new UnauthorizedException('Authorization failed');
       // }
     } catch (e) {
-      console.log(e);
+      if (e.response.status && e.response.data.error_description) {
+        throw new HttpException(
+          e.response.data.error_description,
+          e.response.status,
+        );
+      }
+
+      throw e;
     }
   }
 
