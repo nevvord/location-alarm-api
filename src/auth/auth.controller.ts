@@ -41,6 +41,6 @@ export class AuthController {
       secure: false,
     });
 
-    res.json({});
+    res.json(tokens);
   }
 }
