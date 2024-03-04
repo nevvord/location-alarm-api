@@ -10,12 +10,8 @@ export class UsersService {
     @InjectModel(UserEntity.name) private readonly userModel: Model<UserEntity>,
   ) {}
   async create(createUserDto: CreateUserDto) {
-    const createdUser = await new this.userModel(createUserDto);
-    return createdUser.save();
-  }
-
-  findAll() {
-    return this.userModel.find().exec();
+    const createdUser = new this.userModel(createUserDto);
+    return await createdUser.save();
   }
 
   async getById(id: string) {

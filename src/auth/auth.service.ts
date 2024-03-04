@@ -39,8 +39,6 @@ export class AuthService {
         user = await this.usersService.getByEmail(userInfo.email);
       }
 
-      console.log('========= user', user);
-
       return await this.getTokens({
         sub: user._id.toString(),
         email: user.email,
