@@ -16,12 +16,6 @@ export class UserEntity {
 
   @Prop({ required: false })
   refreshToken?: string;
-
-  // @Prop()
-  // createdAt: Date;
-  //
-  // @Prop()
-  // updatedAt: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(UserEntity);
