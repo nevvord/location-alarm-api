@@ -48,7 +48,7 @@ type TLacole =
   | 'mt'
   | 'is';
 
-export interface UserInfoInterface {
+export interface IUserInfo {
   sub: string; //'107002865617408159312';
   name: string; //'Andrii Andrieiev';
   given_name?: string; //'Andrii';

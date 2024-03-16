@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { ForbiddenException, HttpException, Injectable } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import axios from 'axios';
 import { JwtPayload } from './strategies/jwt-access.strategy';
@@ -6,7 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 import jwtConfig from '../config/jwt.config';
 import { UsersService } from '../users/users.service';
 import * as argon2 from 'argon2';
-import { UserInfoInterface } from './interfaces/user-info.interface';
+import { IUserInfo } from './interfaces/user-info.interface';
 
 @Injectable()
 export class AuthService {
@@ -18,12 +18,9 @@ export class AuthService {
   async login(loginDto: LoginDto) {
     try {
       const userInfo = await axios
-        .get<UserInfoInterface>(
-          'https://www.googleapis.com/oauth2/v3/userinfo',
-          {
-            headers: { Authorization: `Bearer ${loginDto.accessToken}` },
-          },
-        )
+        .get<IUserInfo>('https://www.googleapis.com/oauth2/v3/userinfo', {
+          headers: { Authorization: `Bearer ${loginDto.accessToken}` },
+        })
         .then((res) => res.data);
 
       let user = await this.usersService.getByEmail(userInfo.email);
@@ -53,6 +50,26 @@ export class AuthService {
 
       throw e;
     }
+  }
+
+  async logout(id: string): Promise<void> {
+    await this.usersService.update(id, { refreshToken: null });
+    return;
+  }
+
+  async refreshTokens(userId: string, refreshToken: string) {
+    const user = await this.usersService.getById(userId);
+    if (!user || !user.refreshToken)
+      throw new ForbiddenException('Access Denied');
+    const refreshTokenMatches = await argon2.verify(
+      user.refreshToken,
+      refreshToken,
+    );
+    if (!refreshTokenMatches) throw new ForbiddenException('Access Denied');
+    return await this.getTokens({
+      sub: String(user.id),
+      email: user.email,
+    });
   }
 
   async getTokens(payload: JwtPayload) {
